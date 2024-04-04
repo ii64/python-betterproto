@@ -74,6 +74,12 @@ The following tests are automatically executed for all cases:
   - `betterproto/tests/output_reference` &mdash; *reference implementation classes*
 - `pipenv run test`
 
+Poetry
+- `python -m pip install poetry`
+- `poetry install -E compiler`
+- `poetry run python -m tests.generate -v`
+- `poetry run python -m pytest tests/`
+
 ## Intentionally Failing tests
 
 The standard test suite includes tests that fail by intention. These tests document known bugs and missing features that are intended to be corrected in the future.

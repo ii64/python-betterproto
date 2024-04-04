@@ -4,7 +4,7 @@ set -e
 
 export PB_REPO=${1}
 if [ ! -d ${PB_REPO} ] || [ -z ${PB_REPO} ]; then export PB_REPO=/mnt/p0/Personal/protobuf/src; fi
-if [ -z ${PROTOC} ]; then export PROTOC=protoc; fi
+if [ -z ${PROTOC} ]; then export PROTOC="python -m grpc_tools.protoc"; fi
 export FLAGS="${FLAGS} -I${PB_REPO}"
 
 export SOURCES_PB="google/protobuf/any.proto google/protobuf/api.proto google/protobuf/descriptor.proto google/protobuf/duration.proto google/protobuf/empty.proto google/protobuf/field_mask.proto google/protobuf/source_context.proto google/protobuf/struct.proto google/protobuf/timestamp.proto google/protobuf/type.proto google/protobuf/wrappers.proto google/protobuf/compiler/plugin.proto"
