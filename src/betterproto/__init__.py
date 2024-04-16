@@ -1272,9 +1272,9 @@ class Message(ABC):
     @classmethod
     def _is_typing_optional(cls, typ):
         # Check if the origin is Union
-        if getattr(typ, '__origin__', None) is Union:
+        if getattr(typ, "__origin__", None) is Union:
             # Check if one of the arguments in the Union is type(None)
-            return any(arg is type(None) for arg in getattr(typ, '__args__', ()))
+            return any(arg is type(None) for arg in getattr(typ, "__args__", ()))
         return False
 
     @classmethod
@@ -1648,10 +1648,10 @@ class Message(ABC):
                             output[memb_key] = value
                     elif meta.optional:
                         enum_class = field_types[field_name].__args__[0]
-                        if getattr(enum_class, '__origin__', None) is list:
+                        if getattr(enum_class, "__origin__", None) is list:
                             enum_class = enum_class.__args__[0]
                             if isinstance(value, typing.Iterable) and not isinstance(
-                                    value, str
+                                value, str
                             ):
                                 output[memb_key] = [enum_class(el).name for el in value]
                             else:
@@ -1721,7 +1721,7 @@ class Message(ABC):
                     )
                 elif meta.proto_type == TYPE_ENUM:
                     enum_cls = cls._betterproto.cls_by_field[field_name]
-                    if getattr(enum_cls, '__origin__', None) is list:
+                    if getattr(enum_cls, "__origin__", None) is list:
                         enum_cls = enum_cls.__args__[0]
                     if isinstance(value, list):
                         value = [enum_cls.from_string(e) for e in value]
