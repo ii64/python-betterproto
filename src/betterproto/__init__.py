@@ -1270,9 +1270,19 @@ class Message(ABC):
         return get_type_hints(cls, module.__dict__, {})
 
     @classmethod
+    def _is_typing_optional(cls, typ):
+        # Check if the origin is Union
+        if typing.get_origin(typ) is Union:
+            # Check if one of the arguments in the Union is type(None)
+            return any(arg is type(None) for arg in typing.get_args(typ))
+        return False
+
+    @classmethod
     def _cls_for(cls, field: dataclasses.Field, index: int = 0) -> Type:
         """Get the message class for a field from the type hints."""
         field_cls = cls._type_hint(field.name)
+        if cls._is_typing_optional(field_cls):
+            field_cls = field_cls.__args__[0]
         if hasattr(field_cls, "__args__") and index >= 0:
             if field_cls.__args__ is not None:
                 field_cls = field_cls.__args__[index]
