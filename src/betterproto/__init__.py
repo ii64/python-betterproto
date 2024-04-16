@@ -1608,7 +1608,9 @@ class Message(ABC):
                     output_map = {**value}
                     for k in value:
                         if hasattr(value[k], "to_dict"):
-                            output_map[k] = value[k].to_dict(casing, include_default_values)
+                            output_map[k] = value[k].to_dict(
+                                casing, include_default_values
+                            )
 
                     if value or include_default_values:
                         output[memb_key] = output_map
