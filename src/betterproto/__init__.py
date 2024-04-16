@@ -182,7 +182,7 @@ class FieldMetadata:
     optional: Optional[bool] = False
 
     # Holding the original field name on proto file
-    name: Optional[string] = None
+    name: Optional[str] = None
 
     @staticmethod
     def get(field: dataclasses.Field) -> "FieldMetadata":
