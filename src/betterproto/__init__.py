@@ -1638,7 +1638,17 @@ class Message(ABC):
                             output[memb_key] = value
                     elif meta.optional:
                         enum_class = field_types[field_name].__args__[0]
-                        output[memb_key] = enum_class(value).name
+                        if typing.get_origin(enum_class) is list:
+                            enum_class = enum_class.__args__[0]
+                            if isinstance(value, typing.Iterable) and not isinstance(
+                                    value, str
+                            ):
+                                output[memb_key] = [enum_class(el).name for el in value]
+                            else:
+                                # transparently upgrade single value to repeated
+                                output[memb_key] = [enum_class(value).name]
+                        else:
+                            output[memb_key] = enum_class(value).name
                     else:
                         enum_class = field_types[field_name]  # noqa
                         output[memb_key] = enum_class(value).name
@@ -1701,6 +1711,8 @@ class Message(ABC):
                     )
                 elif meta.proto_type == TYPE_ENUM:
                     enum_cls = cls._betterproto.cls_by_field[field_name]
+                    if typing.get_origin(enum_cls) is list:
+                        enum_cls = enum_cls.__args__[0]
                     if isinstance(value, list):
                         value = [enum_cls.from_string(e) for e in value]
                     elif isinstance(value, str):
