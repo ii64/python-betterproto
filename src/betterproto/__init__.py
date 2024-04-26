@@ -1547,8 +1547,9 @@ class Message(ABC):
         for field_name, meta in self._betterproto.meta_by_field_name.items():
             field_is_optional = (
                 getattr(field_types[field_name], "_name", None) == "Optional"
-                or meta.optional
-            )
+                and getattr(field_types[field_name], "__origin__", None)
+                == typing.Optional[lambda x: None].__origin__
+            ) or meta.optional
 
             fn_unwrap_typ_option = lambda x: getattr(x, "__args__", [None])[0]
             fn_unwrap_typ_option_origin_0 = lambda x: getattr(
