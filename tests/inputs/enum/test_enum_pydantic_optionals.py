@@ -1,4 +1,5 @@
 import pydantic
+
 from tests.output_betterproto_pydantic_optionals.enum import (
     ArithmeticOperator,
     Choice,

@@ -1,4 +1,5 @@
 import pydantic
+
 from tests.output_betterproto_pydantic.enum import (
     ArithmeticOperator,
     Choice,
@@ -32,7 +33,10 @@ def test_enum_to_dict():
         "choice" not in Test(choice=Choice.ZERO, choices=[]).to_dict()
     ), "Default enum value is not serialized"
     assert (
-        Test(choice=Choice.ZERO, choices=[]).to_dict(include_default_values=True)["choices"] == []
+        Test(choice=Choice.ZERO, choices=[]).to_dict(include_default_values=True)[
+            "choices"
+        ]
+        == []
     )
     assert (
         Test(choice=Choice.ZERO, choices=[]).to_dict(include_default_values=True)[
