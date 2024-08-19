@@ -35,6 +35,13 @@ from dataclasses import (
     dataclass,
     field,
 )
+
+
+try:
+    from typing import Literal
+except ImportError:
+    from typing_extensions import Literal
+
 from typing import (
     Dict,
     Iterable,
@@ -247,6 +254,8 @@ class OutputTemplate:
     services: List["ServiceCompiler"] = field(default_factory=list)
     imports_type_checking_only: Set[str] = field(default_factory=set)
     pydantic_dataclasses: bool = False
+    use_optionals: Optional[Literal["all"]] = None
+    include_original_field_name: bool = True
     output: bool = True
     typing_compiler: TypingCompiler = field(default_factory=DirectImportTypingCompiler)
 
@@ -329,7 +338,12 @@ class MessageCompiler(ProtoContentBase):
         return pythonize_class_name(self.proto_name)
 
     @property
+    def optional(self) -> bool:
+        return self.proto_obj.proto3_optional or self.output_file.use_optionals == "all"
+
+    @property
     def annotation(self) -> str:
+        py_name = self.py_name
         if self.repeated:
             return self.typing_compiler.list(self.py_name)
         return self.py_name
@@ -433,6 +447,11 @@ class FieldCompiler(MessageCompiler):
             args.append(f"wraps={self.field_wraps}")
         if self.optional:
             args.append(f"optional=True")
+        if (
+            self.proto_name != self.py_name
+            and self.output_file.include_original_field_name
+        ):
+            args.append(f'name="{self.proto_name}"')
         return args
 
     @property
@@ -482,7 +501,7 @@ class FieldCompiler(MessageCompiler):
 
     @property
     def optional(self) -> bool:
-        return self.proto_obj.proto3_optional
+        return self.proto_obj.proto3_optional or self.output_file.use_optionals == "all"
 
     @property
     def mutable(self) -> bool:
@@ -641,7 +660,13 @@ class MapEntryCompiler(FieldCompiler):
 
     @property
     def betterproto_field_args(self) -> List[str]:
-        return [f"betterproto.{self.proto_k_type}", f"betterproto.{self.proto_v_type}"]
+        result = [
+            f"betterproto.{self.proto_k_type}",
+            f"betterproto.{self.proto_v_type}",
+        ]
+        if self.optional:
+            result.append("optional=True")
+        return result
 
     @property
     def field_type(self) -> str:

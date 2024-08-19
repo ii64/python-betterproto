@@ -189,6 +189,9 @@ class FieldMetadata:
     # Is the field optional
     optional: Optional[bool] = False
 
+    # Holding the original field name on proto file
+    name: Optional[str] = None
+
     @staticmethod
     def get(field: dataclasses.Field) -> "FieldMetadata":
         """Returns the field metadata for a dataclass field."""
@@ -203,13 +206,20 @@ def dataclass_field(
     group: Optional[str] = None,
     wraps: Optional[str] = None,
     optional: bool = False,
+    name: Optional[str] = None,
 ) -> dataclasses.Field:
     """Creates a dataclass field with attached protobuf metadata."""
     return dataclasses.field(
         default=None if optional else PLACEHOLDER,
         metadata={
             "betterproto": FieldMetadata(
-                number, proto_type, map_types, group, wraps, optional
+                number,
+                proto_type,
+                map_types,
+                group,
+                wraps,
+                optional,
+                name,
             )
         },
     )
@@ -220,96 +230,192 @@ def dataclass_field(
 # out at runtime. The generated dataclass variables are still typed correctly.
 
 
-def enum_field(number: int, group: Optional[str] = None, optional: bool = False) -> Any:
-    return dataclass_field(number, TYPE_ENUM, group=group, optional=optional)
+def enum_field(
+    number: int,
+    group: Optional[str] = None,
+    optional: bool = False,
+    name: Optional[str] = None,
+) -> Any:
+    return dataclass_field(number, TYPE_ENUM, group=group, optional=optional, name=name)
 
 
-def bool_field(number: int, group: Optional[str] = None, optional: bool = False) -> Any:
-    return dataclass_field(number, TYPE_BOOL, group=group, optional=optional)
+def bool_field(
+    number: int,
+    group: Optional[str] = None,
+    optional: bool = False,
+    name: Optional[str] = None,
+) -> Any:
+    return dataclass_field(number, TYPE_BOOL, group=group, optional=optional, name=name)
 
 
 def int32_field(
-    number: int, group: Optional[str] = None, optional: bool = False
+    number: int,
+    group: Optional[str] = None,
+    optional: bool = False,
+    name: Optional[str] = None,
 ) -> Any:
-    return dataclass_field(number, TYPE_INT32, group=group, optional=optional)
+    return dataclass_field(
+        number, TYPE_INT32, group=group, optional=optional, name=name
+    )
 
 
 def int64_field(
-    number: int, group: Optional[str] = None, optional: bool = False
+    number: int,
+    group: Optional[str] = None,
+    optional: bool = False,
+    name: Optional[str] = None,
 ) -> Any:
-    return dataclass_field(number, TYPE_INT64, group=group, optional=optional)
+    return dataclass_field(
+        number, TYPE_INT64, group=group, optional=optional, name=name
+    )
 
 
 def uint32_field(
-    number: int, group: Optional[str] = None, optional: bool = False
+    number: int,
+    group: Optional[str] = None,
+    optional: bool = False,
+    name: Optional[str] = None,
 ) -> Any:
-    return dataclass_field(number, TYPE_UINT32, group=group, optional=optional)
+    return dataclass_field(
+        number, TYPE_UINT32, group=group, optional=optional, name=name
+    )
 
 
 def uint64_field(
-    number: int, group: Optional[str] = None, optional: bool = False
+    number: int,
+    group: Optional[str] = None,
+    optional: bool = False,
+    name: Optional[str] = None,
 ) -> Any:
-    return dataclass_field(number, TYPE_UINT64, group=group, optional=optional)
+    return dataclass_field(
+        number, TYPE_UINT64, group=group, optional=optional, name=name
+    )
 
 
 def sint32_field(
-    number: int, group: Optional[str] = None, optional: bool = False
+    number: int,
+    group: Optional[str] = None,
+    optional: bool = False,
+    name: Optional[str] = None,
 ) -> Any:
-    return dataclass_field(number, TYPE_SINT32, group=group, optional=optional)
+    return dataclass_field(
+        number, TYPE_SINT32, group=group, optional=optional, name=name
+    )
 
 
 def sint64_field(
-    number: int, group: Optional[str] = None, optional: bool = False
+    number: int,
+    group: Optional[str] = None,
+    optional: bool = False,
+    name: Optional[str] = None,
 ) -> Any:
-    return dataclass_field(number, TYPE_SINT64, group=group, optional=optional)
+    return dataclass_field(
+        number, TYPE_SINT64, group=group, optional=optional, name=name
+    )
 
 
 def float_field(
-    number: int, group: Optional[str] = None, optional: bool = False
+    number: int,
+    group: Optional[str] = None,
+    optional: bool = False,
+    name: Optional[str] = None,
 ) -> Any:
-    return dataclass_field(number, TYPE_FLOAT, group=group, optional=optional)
+    return dataclass_field(
+        number, TYPE_FLOAT, group=group, optional=optional, name=name
+    )
 
 
 def double_field(
-    number: int, group: Optional[str] = None, optional: bool = False
+    number: int,
+    group: Optional[str] = None,
+    optional: bool = False,
+    name: Optional[str] = None,
 ) -> Any:
-    return dataclass_field(number, TYPE_DOUBLE, group=group, optional=optional)
+    return dataclass_field(
+        number, TYPE_DOUBLE, group=group, optional=optional, name=name
+    )
 
 
 def fixed32_field(
-    number: int, group: Optional[str] = None, optional: bool = False
+    number: int,
+    group: Optional[str] = None,
+    optional: bool = False,
+    name: Optional[str] = None,
 ) -> Any:
-    return dataclass_field(number, TYPE_FIXED32, group=group, optional=optional)
+    return dataclass_field(
+        number,
+        TYPE_FIXED32,
+        group=group,
+        optional=optional,
+        name=name,
+    )
 
 
 def fixed64_field(
-    number: int, group: Optional[str] = None, optional: bool = False
+    number: int,
+    group: Optional[str] = None,
+    optional: bool = False,
+    name: Optional[str] = None,
 ) -> Any:
-    return dataclass_field(number, TYPE_FIXED64, group=group, optional=optional)
+    return dataclass_field(
+        number,
+        TYPE_FIXED64,
+        group=group,
+        optional=optional,
+        name=name,
+    )
 
 
 def sfixed32_field(
-    number: int, group: Optional[str] = None, optional: bool = False
+    number: int,
+    group: Optional[str] = None,
+    optional: bool = False,
+    name: Optional[str] = None,
 ) -> Any:
-    return dataclass_field(number, TYPE_SFIXED32, group=group, optional=optional)
+    return dataclass_field(
+        number,
+        TYPE_SFIXED32,
+        group=group,
+        optional=optional,
+        name=name,
+    )
 
 
 def sfixed64_field(
-    number: int, group: Optional[str] = None, optional: bool = False
+    number: int,
+    group: Optional[str] = None,
+    optional: bool = False,
+    name: Optional[str] = None,
 ) -> Any:
-    return dataclass_field(number, TYPE_SFIXED64, group=group, optional=optional)
+    return dataclass_field(
+        number,
+        TYPE_SFIXED64,
+        group=group,
+        optional=optional,
+        name=name,
+    )
 
 
 def string_field(
-    number: int, group: Optional[str] = None, optional: bool = False
+    number: int,
+    group: Optional[str] = None,
+    optional: bool = False,
+    name: Optional[str] = None,
 ) -> Any:
-    return dataclass_field(number, TYPE_STRING, group=group, optional=optional)
+    return dataclass_field(
+        number, TYPE_STRING, group=group, optional=optional, name=name
+    )
 
 
 def bytes_field(
-    number: int, group: Optional[str] = None, optional: bool = False
+    number: int,
+    group: Optional[str] = None,
+    optional: bool = False,
+    name: Optional[str] = None,
 ) -> Any:
-    return dataclass_field(number, TYPE_BYTES, group=group, optional=optional)
+    return dataclass_field(
+        number, TYPE_BYTES, group=group, optional=optional, name=name
+    )
 
 
 def message_field(
@@ -317,17 +423,33 @@ def message_field(
     group: Optional[str] = None,
     wraps: Optional[str] = None,
     optional: bool = False,
+    name: Optional[str] = None,
 ) -> Any:
     return dataclass_field(
-        number, TYPE_MESSAGE, group=group, wraps=wraps, optional=optional
+        number,
+        TYPE_MESSAGE,
+        group=group,
+        wraps=wraps,
+        optional=optional,
+        name=name,
     )
 
 
 def map_field(
-    number: int, key_type: str, value_type: str, group: Optional[str] = None
+    number: int,
+    key_type: str,
+    value_type: str,
+    group: Optional[str] = None,
+    name: Optional[str] = None,
+    optional: bool = False,
 ) -> Any:
     return dataclass_field(
-        number, TYPE_MAP, map_types=(key_type, value_type), group=group
+        number,
+        TYPE_MAP,
+        map_types=(key_type, value_type),
+        group=group,
+        name=name,
+        optional=optional,
     )
 
 
@@ -1156,9 +1278,19 @@ class Message(ABC):
         return get_type_hints(cls, module.__dict__, {})
 
     @classmethod
+    def _is_typing_optional(cls, typ):
+        # Check if the origin is Union
+        if getattr(typ, "__origin__", None) is Union:
+            # Check if one of the arguments in the Union is type(None)
+            return any(arg is type(None) for arg in getattr(typ, "__args__", ()))
+        return False
+
+    @classmethod
     def _cls_for(cls, field: dataclasses.Field, index: int = 0) -> Type:
         """Get the message class for a field from the type hints."""
         field_cls = cls._type_hint(field.name)
+        if cls._is_typing_optional(field_cls):
+            field_cls = field_cls.__args__[0]
         if hasattr(field_cls, "__args__") and index >= 0:
             if field_cls.__args__ is not None:
                 field_cls = field_cls.__args__[index]
@@ -1391,14 +1523,19 @@ class Message(ABC):
         return cls().parse(data)
 
     def to_dict(
-        self, casing: Casing = Casing.CAMEL, include_default_values: bool = False
+        self,
+        casing: Optional[Casing] = Casing.CAMEL,
+        include_default_values: bool = False,
     ) -> Dict[str, Any]:
         """
         Returns a JSON serializable dict representation of this object.
 
         Parameters
         -----------
-        casing: :class:`Casing`
+        casing: Optional[:class:`Casing`]
+            If set to None, it will check field metadata to see if original proto field name
+            is preserved, if it is empty, it will use ``Casing.CAMEL``
+
             The casing to use for key values. Default is :attr:`Casing.CAMEL` for
             compatibility purposes.
         include_default_values: :class:`bool`
@@ -1415,12 +1552,30 @@ class Message(ABC):
         field_types = self._type_hints()
         defaults = self._betterproto.default_gen
         for field_name, meta in self._betterproto.meta_by_field_name.items():
-            field_is_repeated = defaults[field_name] is list
+            field_is_optional = (
+                getattr(field_types[field_name], "_name", None) == "Optional"
+                and getattr(field_types[field_name], "__origin__", None)
+                == typing.Optional[lambda x: None].__origin__
+            ) or meta.optional
+
+            fn_unwrap_typ_option = lambda x: getattr(x, "__args__", [None])[0]
+            fn_unwrap_typ_option_origin_0 = lambda x: getattr(
+                fn_unwrap_typ_option(x), "__origin__", None
+            )
+
+            field_is_repeated = defaults[field_name] is list or (
+                field_is_optional
+                and fn_unwrap_typ_option_origin_0(field_types[field_name]) is list
+            )
             try:
                 value = getattr(self, field_name)
             except AttributeError:
                 value = self._get_field_default(field_name)
-            cased_name = casing(field_name).rstrip("_")  # type: ignore
+
+            memb_key = meta.name or field_name
+            if casing:
+                memb_key = casing(field_name).rstrip("_")  # type: ignore
+
             if meta.proto_type == TYPE_MESSAGE:
                 if isinstance(value, datetime):
                     if (
@@ -1430,7 +1585,7 @@ class Message(ABC):
                             field_name=field_name, meta=meta
                         )
                     ):
-                        output[cased_name] = _Timestamp.timestamp_to_json(value)
+                        output[memb_key] = _Timestamp.timestamp_to_json(value)
                 elif isinstance(value, timedelta):
                     if (
                         value != timedelta(0)
@@ -1439,13 +1594,15 @@ class Message(ABC):
                             field_name=field_name, meta=meta
                         )
                     ):
-                        output[cased_name] = _Duration.delta_to_json(value)
+                        output[memb_key] = _Duration.delta_to_json(value)
                 elif meta.wraps:
                     if value is not None or include_default_values:
-                        output[cased_name] = value
+                        output[memb_key] = value
                 elif field_is_repeated:
                     # Convert each item.
                     cls = self._betterproto.cls_by_field[field_name]
+                    if not value:
+                        value = []
                     if cls == datetime:
                         value = [_Timestamp.timestamp_to_json(i) for i in value]
                     elif cls == timedelta:
@@ -1455,10 +1612,10 @@ class Message(ABC):
                             i.to_dict(casing, include_default_values) for i in value
                         ]
                     if value or include_default_values:
-                        output[cased_name] = value
+                        output[memb_key] = value
                 elif value is None:
                     if include_default_values:
-                        output[cased_name] = value
+                        output[memb_key] = value
                 elif (
                     value._serialized_on_wire
                     or include_default_values
@@ -1466,15 +1623,18 @@ class Message(ABC):
                         field_name=field_name, meta=meta
                     )
                 ):
-                    output[cased_name] = value.to_dict(casing, include_default_values)
+                    output[memb_key] = value.to_dict(casing, include_default_values)
             elif meta.proto_type == TYPE_MAP:
-                output_map = {**value}
-                for k in value:
-                    if hasattr(value[k], "to_dict"):
-                        output_map[k] = value[k].to_dict(casing, include_default_values)
+                if value is not None:
+                    output_map = {**value}
+                    for k in value:
+                        if hasattr(value[k], "to_dict"):
+                            output_map[k] = value[k].to_dict(
+                                casing, include_default_values
+                            )
 
-                if value or include_default_values:
-                    output[cased_name] = output_map
+                    if value or include_default_values:
+                        output[memb_key] = output_map
             elif (
                 value != self._get_field_default(field_name)
                 or include_default_values
@@ -1484,47 +1644,60 @@ class Message(ABC):
             ):
                 if meta.proto_type in INT_64_TYPES:
                     if field_is_repeated:
-                        output[cased_name] = [str(n) for n in value]
+                        output[memb_key] = [str(n) for n in value]
                     elif value is None:
                         if include_default_values:
-                            output[cased_name] = value
+                            output[memb_key] = value
                     else:
-                        output[cased_name] = str(value)
+                        output[memb_key] = str(value)
                 elif meta.proto_type == TYPE_BYTES:
                     if field_is_repeated:
-                        output[cased_name] = [
-                            b64encode(b).decode("utf8") for b in value
-                        ]
+                        output[memb_key] = [b64encode(b).decode("utf8") for b in value]
                     elif value is None and include_default_values:
-                        output[cased_name] = value
+                        output[memb_key] = value
                     else:
-                        output[cased_name] = b64encode(value).decode("utf8")
+                        output[memb_key] = b64encode(value).decode("utf8")
                 elif meta.proto_type == TYPE_ENUM:
                     if field_is_repeated:
                         enum_class = field_types[field_name].__args__[0]
+                        if field_is_optional:
+                            enum_class = fn_unwrap_typ_option(enum_class)
+
                         if isinstance(value, typing.Iterable) and not isinstance(
                             value, str
                         ):
-                            output[cased_name] = [enum_class(el).name for el in value]
-                        else:
+                            output[memb_key] = [enum_class(el).name for el in value]
+                        elif value is not None:
                             # transparently upgrade single value to repeated
-                            output[cased_name] = [enum_class(value).name]
+                            output[memb_key] = [enum_class(value).name]
+                        else:
+                            output[memb_key] = None
                     elif value is None:
                         if include_default_values:
-                            output[cased_name] = value
+                            output[memb_key] = value
                     elif meta.optional:
                         enum_class = field_types[field_name].__args__[0]
-                        output[cased_name] = enum_class(value).name
+                        if getattr(enum_class, "__origin__", None) is list:
+                            enum_class = enum_class.__args__[0]
+                            if isinstance(value, typing.Iterable) and not isinstance(
+                                value, str
+                            ):
+                                output[memb_key] = [enum_class(el).name for el in value]
+                            else:
+                                # transparently upgrade single value to repeated
+                                output[memb_key] = [enum_class(value).name]
+                        else:
+                            output[memb_key] = enum_class(value).name
                     else:
                         enum_class = field_types[field_name]  # noqa
-                        output[cased_name] = enum_class(value).name
+                        output[memb_key] = enum_class(value).name
                 elif meta.proto_type in (TYPE_FLOAT, TYPE_DOUBLE):
                     if field_is_repeated:
-                        output[cased_name] = [_dump_float(n) for n in value]
+                        output[memb_key] = [_dump_float(n) for n in value]
                     else:
-                        output[cased_name] = _dump_float(value)
+                        output[memb_key] = _dump_float(value)
                 else:
-                    output[cased_name] = value
+                    output[memb_key] = value
         return output
 
     @classmethod
@@ -1577,6 +1750,8 @@ class Message(ABC):
                     )
                 elif meta.proto_type == TYPE_ENUM:
                     enum_cls = cls._betterproto.cls_by_field[field_name]
+                    if getattr(enum_cls, "__origin__", None) is list:
+                        enum_cls = enum_cls.__args__[0]
                     if isinstance(value, list):
                         value = [enum_cls.from_string(e) for e in value]
                     elif isinstance(value, str):
