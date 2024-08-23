@@ -2047,7 +2047,7 @@ class Message(ABC):
                     break
             if not set_fields and not is_oneof_fields_has_optional_field:
                 raise ValueError(f"Group {group} has no value; all fields are None")
-            
+
             if len(set_fields) > 1:
                 set_fields_str = ", ".join(set_fields)
                 raise ValueError(
